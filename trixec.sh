@@ -36,9 +36,6 @@ todo() {
 # Tool definitions
 ##############################################################################
 
-STATUS_FILE="$(mktemp -u)"
-export REPORT=""
-
 launch_traceroute() {
     if [ $# -eq 0 ] ; then
         return 1
@@ -64,6 +61,13 @@ launch_theharvester() {
 launch_dnsenum() {
     dnsenum --nocolor "$1"
 }
+
+##############################################################################
+# Internals
+##############################################################################
+
+STATUS_FILE="$(mktemp -u)"
+export REPORT=""
 
 # do tool args...
 launch() {
