@@ -42,7 +42,7 @@ launch_traceroute() {
         return 1
     fi
 
-    tcptraceroute "$1"
+    sudo tcptraceroute "$1"
 }
 
 launch_nmap_discover() {
@@ -51,8 +51,8 @@ launch_nmap_discover() {
 
 launch_nmap_targetted() {
     general_options="-sS --top-ports 2048 -T4 -vvv --reason"
-    nmap -AO $general_options "$@"
-    nmap -sU $general_options "$@"
+    sudo nmap -AO $general_options "$@"
+    sudo nmap -sU $general_options "$@"
 }
 
 launch_theharvester() {
@@ -120,8 +120,9 @@ if [ $# -ne 0 ] ; then
     exit 1
 fi
 
+# Cache sudo password for applications requiring it
 if [ "$(whoami)" != root ] ; then
-    exec sudo "$0" "$@"
+    sudo true
 fi
 
 mkdir -p "$output_dir"
