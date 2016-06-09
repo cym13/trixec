@@ -1,4 +1,5 @@
 #!/bin/bash
+# Copyright Cédric Picard 2016 -- License WTFPL
 
 HELP="\
 Automated discovery toolset
@@ -84,8 +85,9 @@ launch() {
 
         echo -e "\e[33mLaunch \e[0m$target"
 
-        "launch_${type}" "$1"        \
-            >>"${type}__$1" 2>&1     \
+        local filename_base="${type}__$1"
+
+        "launch_${type}" "$1" >>"${filename_base}.out" 2>"${filename_base}.err"
 
         if [ $? -ne 0 ] ; then
             touch "$STATUS_FILE"
@@ -100,6 +102,9 @@ launch() {
 }
 
 launch_() {
+    echo "The command you have asked for doesn't exist."
+    echo "Please add a function named launch_<command_name>"
+    echo "in the 'Tool definition' section of trixec"
     false
 }
 
