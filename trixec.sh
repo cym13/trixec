@@ -85,9 +85,12 @@ launch() {
 
         echo -e "\e[33mLaunch \e[0m$target"
 
-        local filename_base="${type}__$1"
+        local outfile_base="${type}__$1"
 
-        "launch_${type}" "$1" >>"${filename_base}.out" 2>"${filename_base}.err"
+        timestamp="\n## $(date) ##\n"
+        echo -e "$timestamp" >>"${outfile_base}.out"
+        echo -e "$timestamp" >>"${outfile_base}.err"
+        "launch_${type}" "$1" >>"${outfile_base}.out" 2>>"${outfile_base}.err"
 
         if [ $? -ne 0 ] ; then
             touch "$STATUS_FILE"
