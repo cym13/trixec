@@ -17,20 +17,18 @@ need_root=true
 
 output_dir=trixec
 
-target_domains=()
+target_domains=""
 
-target_ranges=()
+target_ranges=""
 
 # Choose here what to launch
 todo() {
-    launch traceroute 8.8.8.8 &
-    launch traceroute yahoo.com &
-    launch traceroute gateway &
     launch traceroute $target_domains &
-    launch nmap_discover  $target_ranges &
-    launch nmap_targetted $target_ranges &
-    launch theharverster $target_domains &
+    launch nmap_targetted $target_domains $target_ranges &
+    launch theharvester $target_domains &
     launch dnsenum $target_domains &
+    launch whois $target_domains &
+    launch dirb $target_domains &
 }
 
 ##############################################################################
@@ -38,6 +36,14 @@ todo() {
 ##############################################################################
 
 launch_traceroute() {
+    if [ $# -eq 0 ] ; then
+        return 1
+    fi
+
+    traceroute "$1"
+}
+
+launch_tcptraceroute() {
     if [ $# -eq 0 ] ; then
         return 1
     fi
@@ -50,9 +56,9 @@ launch_nmap_discover() {
 }
 
 launch_nmap_targetted() {
-    general_options="-sS --top-ports 2048 -T4 -vvv --reason"
+    general_options="-Pn -sS --top-ports 2048 -T4 -vvv --reason"
     sudo nmap -AO $general_options "$@"
-    sudo nmap -sU $general_options "$@"
+#   sudo nmap -sU $general_options "$@"
 }
 
 launch_theharvester() {
@@ -61,6 +67,14 @@ launch_theharvester() {
 
 launch_dnsenum() {
     dnsenum --nocolor "$1"
+}
+
+launch_whois() {
+    whois "$1"
+}
+
+launch_dirb() {
+    dirb "http://$1" ~/usr/tmp/SVNDigger/all.txt
 }
 
 ##############################################################################
@@ -98,7 +112,7 @@ launch() {
         else
             echo -en "\e[32m"
         fi
-        echo -e "Finish \e[0m$1"
+        echo -e "Finish \e[0m$target"
 
         shift
     done
@@ -174,3 +188,4 @@ printf "%s" "[0m[0m __________________ [0m
            [38;5;110m▀▀[38;5;153m▀[38;5;110m▀[38;5;153m▀[38;5;110m▀▀[39m     [38;5;67m▀[48;5;74m▄▄▄▄[48;5;67m█[49;39m [38;5;60m▀▀▀▀▀[39m                [00m
 "
 exit 0
+
